@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.css"/>
     <script src="jquery-2.1.4.min.js"></script>
     <script src="jquery.mobile-1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script src = "cordova.js"></script>
    
 </head>
 <body>
@@ -36,52 +37,21 @@
      <script type="text/javascript">
         
         $(function(){
-         $("#submitBtn").click(function(){
-            addRecord();
-        });
             
-        $("#loadBtn").click(function(){
-            getRecords();
-        });
-        
-
-        function sendRequest(u){
-            // Send request to server
-            //u a url as a string
-            //async is type of request
-            var obj=$.ajax({url:u,async:false});
-            //Convert the JSON string to object
-            var result=$.parseJSON(obj.responseText);
-            return result;	//return object	
-        }
-        
-        function addRecord(){
-            var wl = $("#waterlevel").val();
-            var mi = $("#meterinfo").val();
-            var url = "recordcases.php?cmd=1&waterlevel="+wl+"&meterinfo="+mi+"";
-            var obj = sendRequest(url);   
-            if(obj.result == 1){
-            }
-            else{
-            }
-        }
-            
-        function getRecords(){
-            var url = "recordcases.php?cmd=2";
-            var obj = sendRequest(url);
-            
-            if(obj.result == 1){
-                var output = "";
-                
-                for(var index in obj.waterlevel){
-                    //output += "<li><a href = index.html>";
-                    output += "<li><p>Water level: "+obj.waterlevel[index].waterlevel+"<p>Meter Information: "+obj.waterlevel[index].meterinfo+"</p>";
-     
-                }
-                $("#recordlist").html(output);
-            }
-        }
-            
+                function scan(){     
+    cordova.plugins.barcodeScanner.scan(
+      function (result) {
+          alert("We got a barcode\n" +
+                "Result: " + result.text + "\n" +
+                "Format: " + result.format + "\n" +
+                "Cancelled: " + result.cancelled);
+          $("#reading").val(result.text);
+      }, 
+      function (error) {
+          alert("Scanning failed: " + error);
+      }
+   );
+}
         });
          
     function scan(){     
@@ -97,8 +67,7 @@
           alert("Scanning failed: " + error);
       }
    );
-         
-         }
+}
          
           cordova.plugins.barcodeScanner.encode(cordova.plugins.barcodeScanner.Encode.TEXT_TYPE, "http://www.nytimes.com", function(success) {
             alert("encode success: " + success);
