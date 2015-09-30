@@ -21,12 +21,10 @@
         <div role="main" class = "ui-content">
             <form method="post">
                 <div data-role="fieldcontain">
-                    <input type="text" name="meterinfo" id="meterinfo">
-                    <input type="submit" value="Scan" id="submitBtn">
+                    <input type="submit" value="Scan" id="scanBtn" onclick="scan()">
+                    <input type="text" name="reading" id="reading">
                 </div>
-                <a href="#pageone"  data-role="button" data-icon="arrow-l" data-rel="back">Go Back</a>
             </form>
-            
             
         </div>
         <div data-role="footer">
@@ -86,18 +84,21 @@
             
         });
          
-         
-            cordova.plugins.barcodeScanner.scan(
+    function scan(){     
+    cordova.plugins.barcodeScanner.scan(
       function (result) {
           alert("We got a barcode\n" +
                 "Result: " + result.text + "\n" +
                 "Format: " + result.format + "\n" +
                 "Cancelled: " + result.cancelled);
+          $("#reading").val(result.text);
       }, 
       function (error) {
           alert("Scanning failed: " + error);
       }
    );
+         
+         }
          
           cordova.plugins.barcodeScanner.encode(cordova.plugins.barcodeScanner.Encode.TEXT_TYPE, "http://www.nytimes.com", function(success) {
             alert("encode success: " + success);
